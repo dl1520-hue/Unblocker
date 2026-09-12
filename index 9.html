@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Sunshine</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+body {
+    overflow: hidden;
+}
+
+/* SUNSET BACKGROUND */
+
+.background {
+    position: fixed;
+    inset: 0;
+    background:
+        linear-gradient(
+            180deg,
+            #72c9ee 0%,
+            #a9ddf0 28%,
+            #f8b28b 55%,
+            #ff8b65 75%,
+            #ffd36b 100%
+        );
+    overflow: hidden;
+    z-index: 0;
+}
+
+/* SUN */
+
+.sun {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    left: 52%;
+    top: 60%;
+    transform: translate(-50%, -50%);
+    background:
+        radial-gradient(
+            circle,
+            #fffbd0 0%,
+            #ffe18a 40%,
+            #ffb45d 70%,
+            transparent 72%
+        );
+    animation: sunMove 25s ease-in-out infinite alternate;
+}
+
+@keyframes sunMove {
+    from { left: 48%; top: 58%; }
+    to { left: 58%; top: 65%; }
+}
+
+/* CLOUDS */
+
+.cloud {
+    position: absolute;
+    width: 250px;
+    height: 65px;
+    border-radius: 60px;
+    background: rgba(255,255,255,.65);
+    filter: blur(2px);
+    box-shadow:
+        60px -22px 0 4px rgba(255,255,255,.65),
+        125px -8px 0 7px rgba(255,255,255,.6),
+        190px 7px 0 -4px rgba(255,255,255,.55);
+    animation: clouds 60s linear infinite;
+}
+
+.cloud1 { top: 15%; left: -350px; }
+.cloud2 { top: 32%; left: -500px; transform: scale(.7); opacity: .5; animation-duration: 75s; }
+.cloud3 { top: 48%; left: -400px; transform: scale(.5); opacity: .35; animation-duration: 90s; }
+
+@keyframes clouds {
+    from { margin-left: 0; }
+    to { margin-left: calc(100vw + 800px); }
+}
+
+/* TOP BAR */
+
+.topbar {
+    position: relative;
+    z-index: 10;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(255,255,255,.12);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255,255,255,.25);
+}
+
+.menu {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.35);
+    background: rgba(30,40,50,.4);
+    cursor: pointer;
+}
+
+.menu span {
+    display: block;
+    width: 23px;
+    height: 3px;
+    margin: 4px auto;
+    background: white;
+    border-radius: 5px;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.topButton {
+    margin-left: auto;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.35);
+    background: rgba(30,40,50,.4);
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.closeButton {
+    margin-left: 0;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    position: absolute;
+    z-index: 10;
+    top: 100px;
+    bottom: 0;
+    left: 0;
+    width: 75px;
+    background: rgba(25,35,45,.30);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-right: 1px solid rgba(255,255,255,.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding-top: 18px;
+    transition: .25s;
+}
+
+.sidebar.hidden {
+    transform: translateX(-100%);
+}
+
+.sideButton {
+    width: 45px;
+    height: 45px;
+    border-radius: 11px;
+    border: 1px solid transparent;
+    background: rgba(30,40,50,.25);
+    color: white;
+    font-size: 19px;
+    cursor: pointer;
+}
+
+.sideButton:hover,
+.sideButton:active {
+    background: rgba(255,255,255,.2);
+}
+
+.sideButton.active {
+    background: white;
+    color: #46515a;
+}
+
+/* MAIN */
+
+.main {
+    position: absolute;
+    z-index: 5;
+    top: 100px;
+    bottom: 0;
+    left: 75px;
+    right: 0;
+    overflow: hidden;
+}
+
+/* HOME CONTENT */
+
+.home-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-content.hidden {
+    display: none !important;
+}
+
+.content {
+    width: min(850px, 75vw);
+    text-align: center;
+}
+
+.label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: rgba(30,40,50,.35);
+    border: 1px solid rgba(255,255,255,.3);
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+
+h1 {
+    font-size: 85px;
+    margin: 25px 0 15px;
+    letter-spacing: -5px;
+}
+
+.tagline {
+    font-size: 14px;
+    letter-spacing: 3px;
+}
+
+.made {
+    margin-top: 8px;
+    font-size: 13px;
+    opacity: .7;
+}
+
+.search {
+    margin-top: 28px;
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    border-radius: 18px;
+    background: rgba(30,40,50,.3);
+    border: 1px solid rgba(255,255,255,.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.searchIcon {
+    font-size: 20px;
+    margin-right: 15px;
+}
+
+.search input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: white;
+    font-size: 15px;
+}
+
+.search input::placeholder {
+    color: rgba(255,255,255,.7);
+}
+
+.enter {
+    font-size: 10px;
+    padding: 7px 9px;
+    border-radius: 7px;
+    border: 1px solid rgba(255,255,255,.3);
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 7px;
+    margin-top: 10px;
+}
+
+.card {
+    height: 65px;
+    border-radius: 13px;
+    border: 1px solid rgba(255,255,255,.35);
+    background: rgba(30,40,50,.27);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    transition: .2s;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.card:hover,
+.card:active {
+    transform: translateY(-3px);
+    background: rgba(255,255,255,.2);
+}
+
+.icon {
+    font-size: 17px;
+}
+
+/* ===== GAMES VIEW ===== */
+
+.games-view {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-direction: column;
+    padding: 20px 25px;
+    overflow: hidden;
+    z-index: 6;
+}
+
+.games-view.visible {
+    display: flex !important;
+}
+
+.games-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    flex-shrink: 0;
+    gap: 12px;
+}
+
+.games-header h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.games-header p {
+    margin: 4px 0 0;
+    opacity: 0.75;
+    font-size: 14px;
+}
+
+.back-btn {
+    padding: 12px 22px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.4);
+    background: rgba(30,40,50,.5);
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: .2s;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.back-btn:hover,
+.back-btn:active {
+    background: rgba(255,255,255,.3);
+}
+
+.games-grid {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding-bottom: 20px;
+    align-content: start;
+}
+
+.game-card {
+    min-height: 110px;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.4);
+    background: rgba(40,50,60,.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    cursor: pointer;
+    transition: .2s;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.game-card:hover,
+.game-card:active {
+    transform: translateY(-4px);
+    background: rgba(255,255,255,.25);
+}
+
+.game-number {
+    font-size: 11px;
+    opacity: .6;
+    letter-spacing: 2px;
+}
+
+.game-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.game-desc {
+    font-size: 12px;
+    opacity: .75;
+    margin-top: 6px;
+}
+
+/* MOBILE / iPad */
+
+@media (max-width: 900px) {
+    .games-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .sidebar {
+        width: 58px;
+    }
+
+    .main {
+        left: 58px;
+    }
+
+    .content {
+        width: 88vw;
+    }
+
+    h1 {
+        font-size: 48px;
+        letter-spacing: -2px;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .game-card {
+        min-height: 95px;
+        padding: 12px;
+    }
+
+    .games-header h2 {
+        font-size: 22px;
+    }
+
+    .back-btn {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 400px) {
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="background">
+    <div class="sun"></div>
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+</div>
+
+<!-- TOP BAR -->
+<header class="topbar">
+    <button class="menu" id="menuButton" type="button">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="logo">Sunshine</div>
+
+    <button class="topButton" type="button">↥</button>
+    <button class="topButton closeButton" type="button">×</button>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <button class="sideButton active" id="side-games" type="button" title="Games" onclick="window.showGames && window.showGames(event)">□</button>
+    <button class="sideButton" id="side-home" type="button" title="Home" onclick="window.showHome && window.showHome(event)">⌂</button>
+    <button class="sideButton" type="button">▣</button>
+    <button class="sideButton" type="button">◇</button>
+    <button class="sideButton" type="button">♫</button>
+    <button class="sideButton" type="button">●</button>
+    <button class="sideButton" type="button" style="margin-top:auto;margin-bottom:20px;">ⓘ</button>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+    <!-- HOME -->
+    <section class="home-content" id="home-content">
+        <div class="content">
+            <div class="label">
+                <span class="dot"></span>
+                SUNSHINE
+            </div>
+
+            <h1>Sunshine</h1>
+
+            <div class="tagline">YOUR SPACE. YOUR TOOLS. YOUR WAY.</div>
+            <div class="made">Made by Alden</div>
+
+            <div class="search">
+                <span class="searchIcon">⌕</span>
+                <input id="search" type="text" placeholder="Search games..." autocomplete="off">
+                <span class="enter">ENTER</span>
+            </div>
+
+            <div class="cards">
+                <button class="card" id="games-btn" type="button" onclick="window.showGames && window.showGames(event)">
+                    <span class="icon">□</span>
+                    Games
+                </button>
+
+                <a class="card" href="https://discord.gg/t6GFmzu9z" target="_blank" rel="noopener noreferrer">
+                    <span class="icon">●</span>
+                    Discord
+                </a>
+
+                <button class="card" type="button">
+                    <span class="icon">◇</span>
+                    Projects
+                </button>
+
+                <button class="card" type="button">
+                    <span class="icon">♫</span>
+                    Music
+                </button>
+
+                <button class="card" type="button">
+                    <span class="icon">ⓘ</span>
+                    About
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- GAMES VIEW -->
+    <section class="games-view" id="games-view">
+        <div class="games-header">
+            <div>
+                <h2>☀️ Sunshine Games</h2>
+                <p>125 games available</p>
+            </div>
+            <button class="back-btn" id="back-home" type="button" onclick="window.showHome && window.showHome(event)">← Back to Home</button>
+        </div>
+        <div class="games-grid" id="games-grid"></div>
+    </section>
+
+</main>
+
+<script>
+(function () {
+    "use strict";
+
+    /* MENU */
+    var menu = document.getElementById("menuButton");
+    var sidebar = document.getElementById("sidebar");
+
+    function toggleMenu(e) {
+        if (e) e.preventDefault();
+        sidebar.classList.toggle("hidden");
+    }
+
+    menu.addEventListener("click", toggleMenu);
+    menu.addEventListener("touchend", function (e) {
+        e.preventDefault();
+        toggleMenu(e);
+    }, { passive: false });
+
+    /* SEARCH */
+    var search = document.getElementById("search");
+    search.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            var value = search.value.trim();
+            if (value !== "") {
+                alert("Searching for: " + value);
+            }
+        }
+    });
+
+    /* GAMES DATA */
+    var gamesList = [
+        "Sunset Rush", "Skyline Sprint", "Cloud Hopper", "Neon Drift", "Pixel Quest",
+        "Star Harbor", "Island Dash", "Rocket Run", "Crystal Caverns", "Mystery Mansion",
+        "Forest Escape", "Desert Rally", "Ocean Explorer", "Moon Base", "Cyber City",
+        "Castle Clash", "Robot Arena", "Jungle Jump", "Snowboard Peak", "Volcano Valley",
+        "Treasure Trail", "Space Station", "Laser League", "Tiny Town", "Dragon Flight",
+        "Pirate Bay", "Haunted Hotel", "Candy Factory", "Sky Wars", "Block Builder",
+        "Galaxy Raiders", "Meteor Dodge", "Speed Circuit", "Ninja Run", "Wizard Academy",
+        "Farm Frenzy", "Subway Escape", "Tower Defense", "Color Rush", "Gravity Flip",
+        "Deep Sea Dive", "Airship Adventure", "Rooftop Runner", "Dungeon Quest", "Wild West Duel",
+        "Arctic Mission", "Future City", "Train Tycoon", "Airport Manager", "Zoo Builder",
+        "Racing Rivals", "Street Hoops", "Goal Master", "Battle Bots", "Mech Mayhem",
+        "Alien Outpost", "Solar Survivor", "Astro Miner", "Planet Hopper", "Comet Catcher",
+        "Magic Forest", "Potion Shop", "Knight's Journey", "Castle Builder", "Dragon Keeper",
+        "Fairy Village", "Mystic Maze", "Rune Runner", "Shadow Chase", "Light Keeper",
+        "Cyber Runner", "Holo Hunt", "Digital Detective", "Code Breaker", "Data Dash",
+        "Circuit Clash", "Tech Tower", "Virtual Valley", "Quantum Quest", "AI Arena",
+        "Beach Party", "Pool Dash", "Surf City", "Summer Sprint", "Water Park",
+        "Boardwalk Tycoon", "Lifeguard Rush", "Island Resort", "Tropical Trader", "Coral Kingdom",
+        "Autumn Adventure", "Pumpkin Run", "Harvest Hills", "Cozy Cafe", "Bookstore Builder",
+        "Garden Glow", "Rainy Day Race", "Maple Village", "Lantern Festival", "Woodland Quest",
+        "Winter Village", "Ice Castle", "Snowball Sprint", "Ski Resort", "Frozen Lab",
+        "Aurora Chase", "Penguin Patrol", "Blizzard Run", "Frosty Factory", "Polar Expedition",
+        "Spring Bloom", "Flower Valley", "Bunny Bounce", "Picnic Park", "Rainbow Road",
+        "Butterfly Garden", "Fresh Farm", "Meadow Match", "Cherry Blossom Town", "Sunshine Valley",
+        "Ultimate Obby", "Infinite Runner", "Puzzle Planet", "Memory Maze", "Trivia Tower",
+        "Mini Game Mayhem", "Arcade Avenue", "Lucky Labyrinth", "Champion's Arena", "Final Frontier"
+    ];
+
+    var descriptions = [
+        "A fun Sunshine adventure.",
+        "Race, explore and beat your score.",
+        "Jump into a brand-new challenge.",
+        "Explore a colorful world.",
+        "Compete and become the champion."
+    ];
+
+    var gamesGrid = document.getElementById("games-grid");
+
+    for (var i = 0; i < gamesList.length; i++) {
+        (function (game, index) {
+            var card = document.createElement("div");
+            card.className = "game-card";
+            card.innerHTML =
+                '<div class="game-number">GAME ' + String(index + 1).padStart(3, "0") + '</div>' +
+                '<div class="game-name">' + game + '</div>' +
+                '<div class="game-desc">' + descriptions[index % descriptions.length] + '</div>';
+
+            function selectGame(e) {
+                if (e) e.preventDefault();
+                alert("You selected " + game);
+            }
+
+            card.addEventListener("click", selectGame);
+            card.addEventListener("touchend", function (e) {
+                e.preventDefault();
+                selectGame(e);
+            }, { passive: false });
+
+            gamesGrid.appendChild(card);
+        })(gamesList[i], i);
+    }
+
+    /* SHOW / HIDE GAMES */
+    var homeContent = document.getElementById("home-content");
+    var gamesView = document.getElementById("games-view");
+    var gamesBtn = document.getElementById("games-btn");
+    var backBtn = document.getElementById("back-home");
+    var sideGames = document.getElementById("side-games");
+    var sideHome = document.getElementById("side-home");
+
+    function showGames(e) {
+        if (e) {
+            try { e.preventDefault(); } catch (err) {}
+            try { e.stopPropagation(); } catch (err) {}
+        }
+
+        homeContent.classList.add("hidden");
+        homeContent.style.display = "none";
+
+        gamesView.classList.add("visible");
+        gamesView.style.display = "flex";
+
+        var buttons = document.querySelectorAll(".sideButton");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove("active");
+        }
+        if (sideGames) sideGames.classList.add("active");
+    }
+
+    function showHome(e) {
+        if (e) {
+            try { e.preventDefault(); } catch (err) {}
+            try { e.stopPropagation(); } catch (err) {}
+        }
+
+        gamesView.classList.remove("visible");
+        gamesView.style.display = "none";
+
+        homeContent.classList.remove("hidden");
+        homeContent.style.display = "flex";
+
+        var buttons = document.querySelectorAll(".sideButton");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove("active");
+        }
+        if (sideHome) sideHome.classList.add("active");
+    }
+
+    // Make functions global so inline onclick works on iPad
+    window.showGames = showGames;
+    window.showHome = showHome;
+
+    // Also wire with listeners
+    if (gamesBtn) {
+        gamesBtn.addEventListener("click", showGames);
+        gamesBtn.ontouchend = function (e) { showGames(e); };
+    }
+
+    if (sideGames) {
+        sideGames.addEventListener("click", showGames);
+        sideGames.ontouchend = function (e) { showGames(e); };
+    }
+
+    if (backBtn) {
+        backBtn.addEventListener("click", showHome);
+        backBtn.ontouchend = function (e) { showHome(e); };
+    }
+
+    if (sideHome) {
+        sideHome.addEventListener("click", showHome);
+        sideHome.ontouchend = function (e) { showHome(e); };
+    }
+
+})();
+</script>
+
+</body>
+</html>
